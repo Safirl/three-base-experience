@@ -7,6 +7,7 @@ import Sizes from "../utils/Sizes";
 import Time from "../utils/Time";
 import World from "../world/World";
 import Debug from "../utils/Debug";
+import OrbitCamera from "../template/OrbitCamera";
 
 export default class Experience {
   declare canvas: HTMLCanvasElement;
@@ -21,7 +22,7 @@ export default class Experience {
 
   static instance: Experience | null = null
 
-  constructor(canvas: HTMLCanvasElement, sources: Source[]) {
+  constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
     //Singleton. That means you can't instantiate multiple experiences. 
     if(Experience.instance)
     {
@@ -42,9 +43,19 @@ export default class Experience {
     this.time = new Time();
     this.scene = new THREE.Scene();
     this.resources = new Resources(sources);
-    this.camera = new Camera();
+    
+    /**
+     * Specific classes from template
+    */
+    this.camera = camera
+    this.camera.init()
+    this.world = world
+    this.world.init()
+
+    /**
+      * End of specific classes
+    */
     this.renderer = new Renderer();
-    this.world = new World();
 
     // Sizes resize event
     this.sizes.on("resize", () => {
@@ -89,7 +100,6 @@ export default class Experience {
     });
 
     this.sizes.destroy();
-    this.camera.controls?.dispose();
     this.renderer.instance.dispose();
     if (this.debug.active) {
       this.debug.ui.destroy()

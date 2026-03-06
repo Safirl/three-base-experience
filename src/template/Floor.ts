@@ -43,8 +43,8 @@ export default class Floor {
 
     this.textures.normal.colorSpace = THREE.SRGBColorSpace;
     // this.textures.normal.repeat.set(1.5, 1.5);
-    this.textures.normal.wrapS = THREE.RepeatWrapping;
-    this.textures.normal.wrapT = THREE.RepeatWrapping;
+    // this.textures.normal.wrapS = THREE.RepeatWrapping;
+    // this.textures.normal.wrapT = THREE.RepeatWrapping;
   }
 
   setMaterial() {

@@ -1,16 +1,21 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
+// import { OrbitControls } from "three/examples/jsm/Addons.js";
 import Experience from "./Experience";
+import type { LifeTimeObject } from "../types/types";
 
-export default class Camera {
+export default class Camera implements LifeTimeObject {
   declare experience: Experience;
   declare sizes: Experience["sizes"];
   declare scene: Experience["scene"];
   declare canvas: Experience["canvas"];
-  declare instance: THREE.PerspectiveCamera;
-  declare controls: OrbitControls;
+  //@TODO do we want to keep a perspective camera or give the opportunity to change it ?
+  declare instance: THREE.PerspectiveCamera; //or THREE.Camera
+  // declare controls: OrbitControls
 
-  constructor() {
+  /**
+   * Called by the experience when the scene has been initialized
+   */
+  init() {
     if (!Experience.instance) {
       return;
     }
@@ -18,9 +23,9 @@ export default class Camera {
     this.sizes = this.experience.sizes;
     this.scene = this.experience.scene;
     this.canvas = this.experience.canvas;
-
+  
     this.setInstance();
-    this.setOrbitControls();
+    // this.setControls();
   }
 
   setInstance() {
@@ -34,17 +39,12 @@ export default class Camera {
     this.scene.add(this.instance);
   }
 
-  setOrbitControls() {
-    this.controls = new OrbitControls(this.instance, this.canvas);
-    this.controls.enableDamping = true;
-  }
-
   resize() {
     this.instance.aspect = this.sizes.width / this.sizes.height;
     this.instance.updateProjectionMatrix();
   }
 
-  update() {
-    this.controls.update();
-  }
+  update() {}
+
+  destroy() {}
 }

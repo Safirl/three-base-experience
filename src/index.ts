@@ -4,9 +4,9 @@ export { default as Camera } from './experience/Camera'
 export { default as Renderer } from './Renderer'
 
 // Actor
-export { default as Actor } from './actor/Actor'
-export { Animation } from './actor/Animation'
-export type { Action } from './actor/Animation'
+export { default as Actor } from './objects/Actor'
+export { Animation } from './objects/Animation'
+export type { Action } from './objects/Animation'
 
 // Utils
 export { EventEmitter } from './utils/EventEmitter'
