@@ -3,19 +3,26 @@ import type Resources from "../utils/Resources";
 import Experience from "../experience/Experience";
 import type { LifeTimeObject, Textures } from "../types/types";
 
-export default class Floor implements LifeTimeObject {
+/**
+ * Base class to create static object, such as floor or walls. It uses a Mesh standard material
+ */
+export default abstract class StaticObject implements LifeTimeObject {
   declare experience: Experience
   declare scene: THREE.Scene;
   declare resources: Resources;
-  declare geometry: THREE.CircleGeometry;
+  declare geometry: THREE.BufferGeometry;
   declare textures: Textures
   declare material: THREE.MeshStandardMaterial;
-  declare mesh: THREE.Mesh<THREE.CircleGeometry, THREE.MeshStandardMaterial>;
+  declare mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+  declare receiveShadows: boolean
+  declare castShadow: boolean
 
-  constructor(textures?: Textures) {
+  constructor(textures?: Textures, receiveShadows: boolean = false, castShadow: boolean = false) {
     if (textures) {
       this.textures = textures
     }
+    this.receiveShadows = receiveShadows
+    this.castShadow = castShadow
   }
 
   init() {
@@ -33,9 +40,10 @@ export default class Floor implements LifeTimeObject {
   update() {};
   destroy() {};
 
-  setGeometry() {
-    this.geometry = new THREE.CircleGeometry(5, 64);
-  }
+  /**
+   * Override this function to set the geometry
+   */
+  setGeometry() {}
 
   /**
    * Called when the textures are set. If the texture object is valid, it will set the corresponding texture for the object.
@@ -102,7 +110,8 @@ export default class Floor implements LifeTimeObject {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.rotation.x = -Math.PI * 0.5;
     this.mesh.position.y = -0.001;
-    this.mesh.receiveShadow = true;
+    this.mesh.receiveShadow = this.receiveShadows;
+    this.mesh.castShadow = this.castShadow;
     this.scene.add(this.mesh);
   }
 }

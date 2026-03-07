@@ -1,3 +1,5 @@
+import OrbitCamera from './template/OrbitCamera'
+
 // Core
 export { default as Experience } from './experience/Experience'
 export { default as Camera } from './experience/Camera'
@@ -22,3 +24,8 @@ export { default as EnvironmentMap } from './world/EnvironmentMap'
 
 // Types
 export type { Source } from './types/types'
+
+//Template
+export {default as OrbitCamera} from './template/OrbitCamera'
+export {default as TemplateWorld} from './template/TemplateWorld'
+export {default as sources} from './template/sources'
