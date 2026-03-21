@@ -1,0 +1,1 @@
+-[] Create a light base class ?

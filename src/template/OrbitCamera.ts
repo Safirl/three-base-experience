@@ -18,7 +18,7 @@ export default class OrbitCamera extends Camera{
       100,
     );
     this.instance.position.set(6, 4, 8);
-    this.scene.add(this.instance);
+    super.setInstance()
   }
 
   setControls() {

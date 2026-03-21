@@ -23,20 +23,20 @@ export default abstract class StaticObject implements LifeTimeObject {
     }
     this.receiveShadows = receiveShadows
     this.castShadow = castShadow
-  }
-
-  init() {
+    
     if (!Experience.instance) {
       return
     }
     this.scene = Experience.instance.scene;
     this.resources = Experience.instance.resources;
-
+  
     this.setGeometry();
     this.setTextures();
     this.setMaterial();
     this.setMesh();
-  };
+  }
+
+  init(){};
   update() {};
   destroy() {};
 
