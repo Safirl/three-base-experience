@@ -5,11 +5,6 @@ import Camera from "../experience/Camera";
 export default class OrbitCamera extends Camera{
   declare controls: OrbitControls;
 
-  init(): void {
-    super.init()
-    this.setControls()
-  }
-
   setInstance() {
     this.instance = new THREE.PerspectiveCamera(
       35,

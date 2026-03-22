@@ -25,7 +25,7 @@ export default class Camera implements LifeTimeObject {
     this.canvas = this.experience.canvas;
   
     this.setInstance();
-    // this.setControls();
+    this.setControls();
   }
 
   setInstance() {
