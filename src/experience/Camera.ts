@@ -39,6 +39,12 @@ export default class Camera implements LifeTimeObject {
     this.scene.add(this.instance);
   }
 
+  /**
+   * Override to add controls to the camera
+   * @TODO The Camera should be attached to an actor and not directly passed to the experience ?
+   */
+  setControls() {}
+
   resize() {
     this.instance.aspect = this.sizes.width / this.sizes.height;
     this.instance.updateProjectionMatrix();

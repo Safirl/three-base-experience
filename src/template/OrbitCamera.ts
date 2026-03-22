@@ -26,11 +26,6 @@ export default class OrbitCamera extends Camera{
     this.controls.enableDamping = true;
   }
 
-  resize() {
-    this.instance.aspect = this.sizes.width / this.sizes.height;
-    this.instance.updateProjectionMatrix();
-  }
-
   update() {
     this.controls.update();
   }
