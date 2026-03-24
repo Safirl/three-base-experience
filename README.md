@@ -8,7 +8,7 @@ You can install this repository from npm directly in your project node_modules s
 Here is a code snippet to instantiate an Orbit control camera in a scene. **Don't forge to add a canvas to your experience and a proper reset.css**
 
 ```
-import {Experience, OrbitCamera, World} from "base-experience"
+import {Experience, OrbitCamera, TemplateWorld} from "base-experience"
 //Example sources, replace it with your own. Check the example file at
 //https://github.com/Safirl/three-base-experience/blob/main/src/template/sources.ts
 import { sources } from 'base-experience'
