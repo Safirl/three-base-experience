@@ -25,7 +25,11 @@ export { default as EnvironmentMap } from './world/EnvironmentMap'
 // Types
 export type { Source } from './types/types'
 
+// Objects
+export { default as StaticObject } from './objects/StaticObject'
+
 //Template
+export {default as Floor} from './template/Floor'
 export {default as OrbitCamera} from './template/OrbitCamera'
 export {default as TemplateWorld} from './template/TemplateWorld'
 export {default as sources} from './template/sources'
