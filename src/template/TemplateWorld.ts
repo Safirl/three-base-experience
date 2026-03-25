@@ -15,7 +15,6 @@ export default class TemplateWorld extends World{
 
   onResourcesLoaded() {
     this.floor = new Floor();
-    this.floor.init()
     //Fox is just an actor because it doesn't have any logic in it.
     this.fox = new Actor("fox", this.resources.items.foxModel as GLTF)
     this.fox.model.scale.set(0.02, 0.02, 0.02)
