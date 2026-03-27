@@ -1,6 +1,6 @@
 import type { Source } from "../types/types";
 
-const sources: Source[] = [
+const templateSources: Source[] = [
   {
     name: "environmentMapTexture",
     type: "cubeTexture",
@@ -30,4 +30,4 @@ const sources: Source[] = [
   },
 ];
 
-export default sources;
+export default templateSources;

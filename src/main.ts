@@ -1,7 +1,7 @@
 import './reset.css'
 import './style.css'
 import Experience from './experience/Experience'
-import sources from './template/sources'
+import templateSources from './template/templateSources'
 import OrbitCamera from './template/OrbitCamera'
 import TemplateWorld from './template/TemplateWorld'
 
@@ -16,7 +16,7 @@ const init = () => {
   canvas.style.height = "100%"
   const camera = new OrbitCamera()
   const world = new TemplateWorld()
-  const experience = new Experience(canvas, sources, camera, world)
+  const experience = new Experience(canvas, templateSources, camera, world)
   // const profiles: InputProfile[] = [keyboardProfile, BitControllerProfile]
 
   // experience.inputSystem.addInputProfiles(profiles)

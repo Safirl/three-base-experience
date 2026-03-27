@@ -37,6 +37,6 @@ export { default as StaticObject } from './objects/StaticObject'
 export {default as Floor} from './template/Floor'
 export {default as OrbitCamera} from './template/OrbitCamera'
 export {default as TemplateWorld} from './template/TemplateWorld'
-export {default as sources} from './template/sources'
+export {default as templateSources} from './template/templateSources'
 export {}
 
