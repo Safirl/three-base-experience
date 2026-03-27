@@ -1,15 +1,16 @@
 import * as THREE from "three";
 import Camera from "./Camera";
 import Renderer from "../Renderer";
-import { type Source } from "../types/types";
+import { type LifeTimeObject, type Source } from "../types/types";
 import Resources from "../utils/Resources";
 import Sizes from "../utils/Sizes";
 import Time from "../utils/Time";
 import World from "../world/World";
 import Debug from "../utils/Debug";
 import OrbitCamera from "../template/OrbitCamera";
+import InputSystem from "../inputs/InputSystem";
 
-export default class Experience {
+export default class Experience implements LifeTimeObject {
   declare canvas: HTMLCanvasElement;
   declare sizes: Sizes;
   declare time: Time;
@@ -18,7 +19,8 @@ export default class Experience {
   declare camera: Camera;
   declare renderer: Renderer;
   declare world: World;
-  declare debug: Debug
+  declare debug: Debug;
+  declare inputSystem: InputSystem
 
   static instance: Experience | null = null
 
@@ -43,10 +45,11 @@ export default class Experience {
     this.time = new Time();
     this.scene = new THREE.Scene();
     this.resources = new Resources(sources);
+    this.inputSystem = new InputSystem();
     
     /**
-     * Specific classes from template
-    */
+     * constructor parameter values
+     */
     this.camera = camera
     this.camera.init()
     this.world = world
@@ -70,6 +73,8 @@ export default class Experience {
     console.log("Experience class instantiated");
   }
 
+  init = () => {}
+
   resize() {
     this.camera.resize();
     this.renderer.resize();
@@ -79,12 +84,14 @@ export default class Experience {
     this.camera.update();
     this.world.update();
     this.renderer.update();
+    this.inputSystem.update();
   }
 
   destroy() {
     this.sizes.off("resize");
     this.time.off("tick");
 
+    this.world.destroy();
     // Traverse the whole scene
     this.scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
@@ -105,6 +112,7 @@ export default class Experience {
       this.debug.ui.destroy()
     }
 
+    this.inputSystem.destroy();
     console.log("Experience class destroyed");
   }
 }

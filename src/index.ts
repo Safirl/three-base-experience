@@ -5,6 +5,10 @@ export { default as Experience } from './experience/Experience'
 export { default as Camera } from './experience/Camera'
 export { default as Renderer } from './Renderer'
 
+//Inputs
+export { default as InputSystem} from './inputs/InputSystem'
+export { type InputAction, type InputEventArgs, type InputProfile} from './inputs/inputInterfaces'
+
 // Actor
 export { default as Actor } from './objects/Actor'
 export { Animation } from './objects/Animation'
@@ -34,3 +38,5 @@ export {default as Floor} from './template/Floor'
 export {default as OrbitCamera} from './template/OrbitCamera'
 export {default as TemplateWorld} from './template/TemplateWorld'
 export {default as sources} from './template/sources'
+export {}
+
