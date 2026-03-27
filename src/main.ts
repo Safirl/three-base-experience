@@ -16,7 +16,7 @@ const init = () => {
   canvas.style.height = "100%"
   const camera = new OrbitCamera()
   const world = new TemplateWorld()
-  const experience = new Experience(canvas, templateSources, camera, world)
+  new Experience(canvas, templateSources, camera, world)
   // const profiles: InputProfile[] = [keyboardProfile, BitControllerProfile]
 
   // experience.inputSystem.addInputProfiles(profiles)

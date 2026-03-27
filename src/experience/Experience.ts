@@ -7,7 +7,6 @@ import Sizes from "../utils/Sizes";
 import Time from "../utils/Time";
 import World from "../world/World";
 import Debug from "../utils/Debug";
-import OrbitCamera from "../template/OrbitCamera";
 import InputSystem from "../inputs/InputSystem";
 
 export default class Experience implements LifeTimeObject {
