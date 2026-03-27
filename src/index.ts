@@ -24,6 +24,7 @@ export { default as EnvironmentMap } from './world/EnvironmentMap'
 
 // Types
 export type { Source } from './types/types'
+export type {LifeTimeObject} from "./types/types"
 
 // Objects
 export { default as StaticObject } from './objects/StaticObject'
