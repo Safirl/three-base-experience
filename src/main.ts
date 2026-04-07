@@ -8,7 +8,7 @@ import TemplateWorld from './template/TemplateWorld'
 const init = () => {
   const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement
   if (!canvas) {
-    throw new Error("No canvas found with three identifier!");
+    throw new Error("Canvas not found: no element with id 'three' exists in the DOM.");
   }
   
   canvas.style.width = "100%"
