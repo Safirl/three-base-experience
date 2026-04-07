@@ -25,9 +25,7 @@ export default class Actor
 
     constructor(name: string, resource: GLTF) 
     {
-        if (!Experience.instance) {
-            return;
-        }
+        if (!Experience.instance) throw new Error("can't instantiate actor, Experience.instance is not valid");
 
         this.experience = Experience.instance
         this.debug = this.experience.debug

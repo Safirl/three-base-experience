@@ -18,9 +18,8 @@ export default class Environment {
   declare debugFolder: GUI
 
   constructor(environmentMap?: THREE.CubeTexture) {
-    if (!Experience.instance) {
-      return
-    }
+    if (!Experience.instance) throw new Error("Can't instantiate Environment map, experience is not valid");
+
     this.experience = Experience.instance;
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;

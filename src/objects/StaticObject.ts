@@ -18,15 +18,15 @@ export default abstract class StaticObject implements LifeTimeObject {
   declare castShadow: boolean
 
   constructor(textures?: Textures, receiveShadows: boolean = false, castShadow: boolean = false) {
+    if (!Experience.instance) throw new Error("Can't instantiate StaticObject, experience is not valid");
+    
     if (textures) {
       this.textures = textures
     }
     this.receiveShadows = receiveShadows
     this.castShadow = castShadow
     
-    if (!Experience.instance) {
-      return
-    }
+
     this.scene = Experience.instance.scene;
     this.resources = Experience.instance.resources;
   

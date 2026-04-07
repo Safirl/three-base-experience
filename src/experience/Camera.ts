@@ -21,7 +21,7 @@ export default class Camera implements LifeTimeObject {
    */
   init() {
     if (!Experience.instance) {
-      return;
+      throw new Error("can't instantiate camera, Experience.instance is not valid")
     }
     this.experience = Experience.instance;
     this.sizes = this.experience.sizes;
