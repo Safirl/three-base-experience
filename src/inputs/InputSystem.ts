@@ -15,7 +15,7 @@ export default class InputSystem extends EventEmitter implements LifeTimeObject 
         this.gamepads = [];
         this.profiles = [];
 
-        if (!Experience.instance) throw new Error("can't instantiate Inputsystem, Experience.instance is not valid");
+        if (!Experience.instance) throw new Error("InputSystem initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating the InputSystem.")
 
         this.experience = Experience.instance;
         this.debug = this.experience.debug
