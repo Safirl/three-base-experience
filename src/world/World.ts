@@ -12,9 +12,10 @@ export default class World implements LifeTimeObject {
   declare environment: Environment;
   declare resources: Experience["resources"];
 
-  /**
-   * World is initialized only when the resources are loaded
-   */
+/**
+ * Initializes the World after resources are loaded.
+ * The method is automatically called by the Experience when the asset loading is complete.
+ */
   init() {
     if (!Experience.instance) {
       return;
