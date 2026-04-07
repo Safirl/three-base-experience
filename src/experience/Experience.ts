@@ -44,7 +44,6 @@ export default class Experience implements LifeTimeObject {
     this.time = new Time();
     this.scene = new THREE.Scene();
     this.resources = new Resources(sources);
-    this.resources.on("ready", () => this.onResourcesLoaded());
     this.inputSystem = new InputSystem();
     
     /**
@@ -67,6 +66,9 @@ export default class Experience implements LifeTimeObject {
     this.time.on("tick", () => {
       this.update();
     });
+
+    this.resources.on("ready", () => this.onResourcesLoaded());
+
 
     console.log("Experience class instantiated");
   }
