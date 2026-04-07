@@ -17,7 +17,7 @@ export default class World implements LifeTimeObject {
   }
 
   init() {
-    if (!Experience.instance) throw new Error("Can't instantiate World, experience is not valid");
+    if (!Experience.instance) throw new Error("World initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating the World.");
     
     this.experience = Experience.instance;
     this.scene = this.experience.scene;
