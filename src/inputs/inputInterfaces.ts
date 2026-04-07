@@ -1,13 +1,19 @@
+/**
+ * Checkout https://luser.github.io/gamepadtest/ to find informations about your controller
+ * @param id The id of your controller. Used to find a matching controller profile when a new controller is connected.
+ */
 export interface InputProfile {
     id: string
     buttons: InputAction[]
-    axes?: InputAction[]
+    axes?: InputAxis[]
 }
 
 /**
  * Used by InputProfiles to provide events to inputs. 
  * When a gamepad triggers and event, 
- * the inputSystem finds the corresponding index and triggers the user event. 
+ * the inputSystem finds the corresponding index and triggers the user event.
+ * @param physicalInput The corresponding input on your controller. Usefull to display UI informations.
+ * @param index The index on the controller.
  */
 export interface InputAction {
     physicalInput: string
@@ -15,6 +21,15 @@ export interface InputAction {
     event: string
 } 
 
+/**
+ * Used by InputProfiles to provide events to inputs. 
+ * @param deadzone The event won't be called if the axis value is inferior to the deadzone value.
+ * @param sign Possible values: -1 or 1. The sign of the axis. If it doesn't matches the sign of the value of the axis, the event won't be called. 
+ */
+export interface InputAxis extends InputAction {
+    sign: number
+    deadzone: number
+}
 export interface InputEventArgs {
     type: string
     controller: Gamepad | string

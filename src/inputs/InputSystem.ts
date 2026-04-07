@@ -100,6 +100,7 @@ export default class InputSystem extends EventEmitter implements LifeTimeObject 
 
     update() {
         this.gamepads.forEach((gamepad) => {
+            console.log(gamepad.axes)
             const profile = this.profiles.find((p) => p.id === gamepad.id)
             if (!profile) return;
             
