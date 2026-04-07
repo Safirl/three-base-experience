@@ -44,15 +44,14 @@ export default class Experience implements LifeTimeObject {
     this.time = new Time();
     this.scene = new THREE.Scene();
     this.resources = new Resources(sources);
+    this.resources.on("ready", () => this.onResourcesLoaded());
     this.inputSystem = new InputSystem();
     
     /**
      * constructor parameter values
      */
     this.camera = camera
-    this.camera.init()
     this.world = world
-    this.world.init()
 
     /**
       * End of specific classes
@@ -70,6 +69,14 @@ export default class Experience implements LifeTimeObject {
     });
 
     console.log("Experience class instantiated");
+  }
+
+  /**
+   * Init classes only when the resources are loaded
+   */
+  onResourcesLoaded() {
+    this.camera.init()
+    this.world.init()
   }
 
   init = () => {}

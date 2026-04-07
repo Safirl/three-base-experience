@@ -12,10 +12,9 @@ export default class World implements LifeTimeObject {
   declare environment: Environment;
   declare resources: Experience["resources"];
 
-  onResourcesLoaded() {
-    this.environment = new Environment();
-  }
-
+  /**
+   * World is initialized only when the resources are loaded
+   */
   init() {
     if (!Experience.instance) {
       return;
@@ -23,8 +22,7 @@ export default class World implements LifeTimeObject {
     this.experience = Experience.instance;
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
-    
-    this.resources.on("ready", () => this.onResourcesLoaded());
+    new Environment();
   }
 
   destroy() {}
