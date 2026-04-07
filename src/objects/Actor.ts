@@ -25,9 +25,8 @@ export default class Actor
 
     constructor(name: string, resource: GLTF) 
     {
-        if (!Experience.instance) {
-            return;
-        }
+        if (!Experience.instance) throw new Error("Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.");
+        
 
         this.experience = Experience.instance
         this.debug = this.experience.debug

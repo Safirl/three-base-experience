@@ -18,9 +18,8 @@ export default class Environment {
   declare debugFolder: GUI
 
   constructor(environmentMap?: THREE.CubeTexture) {
-    if (!Experience.instance) {
-      return
-    }
+    if (!Experience.instance) throw new Error("Environment initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating the Environment.");
+
     this.experience = Experience.instance;
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;

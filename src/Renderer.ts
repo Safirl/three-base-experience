@@ -10,10 +10,10 @@ export default class Renderer {
   declare instance: THREE.WebGLRenderer;
 
   constructor() {
-    if (!Experience.instance) {
-      console.error("can't instantiate renderer, Experience.instance is not valid");
-      return;
-    }
+    if (!Experience.instance) throw new Error("Renderer initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating the Renderer.");
+
+    
+
     this.experience = Experience.instance;
     this.canvas = this.experience.canvas;
     this.sizes = this.experience.sizes;
