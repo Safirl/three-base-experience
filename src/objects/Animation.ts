@@ -13,7 +13,7 @@ export class Animation {
     play(name: string) {
         const newAction = this.actions.find(action => action.name === name)?.action
         const oldAction = this.currentAction?.action
-        if (!newAction) throw new Error(`new action is not valid for name: ${name}`);
+        if (!newAction) throw new Error(`Invalid action: no action found for name "${name}".``);
             
         newAction.reset()
         newAction.play()
