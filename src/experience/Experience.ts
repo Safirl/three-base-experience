@@ -50,9 +50,7 @@ export default class Experience implements LifeTimeObject {
      * constructor parameter values
      */
     this.camera = camera
-    this.camera.init()
     this.world = world
-    this.world.init()
 
     /**
       * End of specific classes
@@ -69,7 +67,18 @@ export default class Experience implements LifeTimeObject {
       this.update();
     });
 
+    this.resources.on("ready", () => this.onResourcesLoaded());
+
+
     console.log("Experience class instantiated");
+  }
+
+  /**
+   * Init classes only when the resources are loaded
+   */
+  onResourcesLoaded() {
+    this.camera.init()
+    this.world.init()
   }
 
   init = () => {}
