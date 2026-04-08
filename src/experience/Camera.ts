@@ -4,8 +4,9 @@ import Experience from "./Experience";
 import type { LifeTimeObject } from "../types/types";
 import type Debug from "../utils/Debug";
 import type GUI from "lil-gui";
+import { EventEmitter } from "../utils/EventEmitter";
 
-export default class Camera implements LifeTimeObject {
+export default class Camera extends EventEmitter implements LifeTimeObject {
   declare experience: Experience;
   declare sizes: Experience["sizes"];
   declare scene: Experience["scene"];
