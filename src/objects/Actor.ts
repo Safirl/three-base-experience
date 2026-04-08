@@ -6,11 +6,12 @@ import type Time from "../utils/Time";
 import type Debug from "../utils/Debug";
 import type GUI from "lil-gui";
 import { Animation } from "./Animation";
+import type { LifeTimeObject } from "../types/types";
 
 /**
  * Base class for animated 3D objects. Auto creates a debug folder to play animations.
  */
-export default class Actor
+export default class Actor implements LifeTimeObject
 {
     declare experience: Experience
     declare scene: THREE.Scene
@@ -45,6 +46,9 @@ export default class Actor
         this.setAnimation()
         this.setDebugObject()
     }
+
+    init = () => {};
+    destroy = () => {};
 
     setModel() {
         this.model = this.resource.scene

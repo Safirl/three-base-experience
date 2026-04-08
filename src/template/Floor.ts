@@ -11,10 +11,12 @@ export default class Floor extends StaticObject {
       color: this.resources.items.grassColorTexture as THREE.Texture,
       normal: this.resources.items.grassNormalTexture as THREE.Texture,
     };
-    this.textures.color.colorSpace = THREE.SRGBColorSpace;
-    this.textures.color.repeat.set(1.5, 1.5);
-    this.textures.color.wrapS = THREE.RepeatWrapping;
-    this.textures.color.wrapT = THREE.RepeatWrapping;
+    if (this.textures.color) {
+      this.textures.color.colorSpace = THREE.SRGBColorSpace;
+      this.textures.color.repeat.set(1.5, 1.5);
+      this.textures.color.wrapS = THREE.RepeatWrapping;
+      this.textures.color.wrapT = THREE.RepeatWrapping;
+    }
 
     if (this.textures.normal) {
       this.textures.normal.colorSpace = THREE.SRGBColorSpace;

@@ -8,6 +8,7 @@ import Time from "../utils/Time";
 import World from "../world/World";
 import Debug from "../utils/Debug";
 import InputSystem from "../inputs/InputSystem";
+import Stats from 'three/addons/libs/stats.module.js';
 
 export default class Experience implements LifeTimeObject {
   declare canvas: HTMLCanvasElement;
@@ -48,20 +49,26 @@ export default class Experience implements LifeTimeObject {
     
     /**
      * constructor parameter values
-     */
-    this.camera = camera
-    this.world = world
-    
-    this.renderer = new Renderer();
-
-    // Sizes resize event
-    this.sizes.on("resize", () => {
-      this.resize();
+    */
+   this.camera = camera
+   this.world = world
+   
+   this.renderer = new Renderer();
+   
+   // Sizes resize event
+   this.sizes.on("resize", () => {
+     this.resize();
     });
-
+    
     this.resources.on("ready", () => this.onResourcesLoaded());
     
+    this.displayPerformances()
     console.log("Experience class instantiated");
+  }
+
+  displayPerformances() {
+    // if (this.debug.active)
+    return;
   }
   
   /**
