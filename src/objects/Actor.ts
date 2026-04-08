@@ -1,7 +1,7 @@
 import Experience from "../experience/Experience";
 import * as THREE from "three"
 import type Resources from "../utils/Resources";
-import type { GLTF } from "three/examples/jsm/Addons.js";
+import { SkeletonUtils, type GLTF } from "three/examples/jsm/Addons.js";
 import type Time from "../utils/Time";
 import type Debug from "../utils/Debug";
 import type GUI from "lil-gui";
@@ -24,7 +24,7 @@ export default class Actor implements LifeTimeObject
     declare debugFolder: GUI
     declare name: string
 
-    constructor(name: string, resource: GLTF) 
+    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false) 
     {
         if (!Experience.instance) throw new Error("Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.");
         
@@ -42,7 +42,7 @@ export default class Actor implements LifeTimeObject
         // Setup
         this.resource = resource
 
-        this.setModel()
+        this.setModel(makeUnique, makeMaterialsUnique)
         this.setAnimation()
         this.setDebugObject()
     }
@@ -50,8 +50,13 @@ export default class Actor implements LifeTimeObject
     init = () => {};
     destroy = () => {};
 
-    setModel() {
-        this.model = this.resource.scene
+    setModel(makeUnique: boolean, makeMaterialsUnique: boolean) {
+        if (makeUnique)
+            this.model = SkeletonUtils.clone(this.resource.scene);
+            // this.model = this.resource.scene.clone()
+        else
+            this.model = this.resource.scene
+
         this.scene.add(this.model)
 
         this.model.traverse((child: any) =>
@@ -59,6 +64,10 @@ export default class Actor implements LifeTimeObject
             if(child instanceof THREE.Mesh)
             {
                 child.castShadow = true
+            }
+            if (makeMaterialsUnique && child instanceof THREE.Material)
+            {
+                child = child.clone()
             }
         })
     }
