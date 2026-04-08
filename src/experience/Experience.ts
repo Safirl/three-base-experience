@@ -51,10 +51,7 @@ export default class Experience implements LifeTimeObject {
      */
     this.camera = camera
     this.world = world
-
-    /**
-      * End of specific classes
-    */
+    
     this.renderer = new Renderer();
 
     // Sizes resize event
@@ -62,21 +59,19 @@ export default class Experience implements LifeTimeObject {
       this.resize();
     });
 
-    // Time tick event
+    this.resources.on("ready", () => this.onResourcesLoaded());
+    
+    console.log("Experience class instantiated");
+  }
+  
+  /**
+   * Init classes only when the resources are loaded
+  */
+ onResourcesLoaded() {
     this.time.on("tick", () => {
       this.update();
     });
-
-    this.resources.on("ready", () => this.onResourcesLoaded());
-
-
-    console.log("Experience class instantiated");
-  }
-
-  /**
-   * Init classes only when the resources are loaded
-   */
-  onResourcesLoaded() {
+    // Time tick event
     this.camera.init()
     this.world.init()
   }

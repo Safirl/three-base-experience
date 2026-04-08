@@ -13,7 +13,8 @@ export default class TemplateWorld extends World{
   declare floor: Floor;
   declare fox: Actor
 
-  onResourcesLoaded() {
+  init() {
+    super.init()
     this.floor = new Floor();
     //Fox is just an actor because it doesn't have any logic in it.
     this.fox = new Actor("fox", this.resources.items.foxModel as GLTF)
