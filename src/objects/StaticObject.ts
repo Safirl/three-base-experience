@@ -15,7 +15,7 @@ export default abstract class StaticObject implements LifeTimeObject {
   declare mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
   declare receiveShadows: boolean
   declare castShadow: boolean
-  private Id: string = crypto.randomUUID()
+  private id: string = crypto.randomUUID()
 
 
   constructor(textures?: Textures, receiveShadows: boolean = false, castShadow: boolean = false) {
@@ -37,7 +37,7 @@ export default abstract class StaticObject implements LifeTimeObject {
   }
 
   getId(): string {
-      return this.Id
+      return this.id
   }
 
   init(){};
@@ -100,14 +100,14 @@ export default abstract class StaticObject implements LifeTimeObject {
   }
 
   setMaterial() {
-    this.material = new THREE.MeshStandardMaterial({
+    this.material = new THREE.MeshStandardMaterial(this.textures ? {
       map: this.textures.color,
       normalMap: this.textures.normal,
       aoMap: this.textures.aoMap,
       metalnessMap: this.textures.metalness,
       roughnessMap: this.textures.roughness,
       displacementMap: this.textures.displacement
-    });
+    } : {});
   }
 
   setMesh() {

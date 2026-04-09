@@ -25,7 +25,7 @@ export default class Actor implements LifeTimeObject
     declare debug: Debug
     declare debugFolder: GUI
     declare name: string
-    private Id: string = crypto.randomUUID()
+    private id: string = crypto.randomUUID()
 
     constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false, collisionResource?: GLTF) 
     {
@@ -54,7 +54,7 @@ export default class Actor implements LifeTimeObject
     }
 
     getId(): string {
-        return this.Id
+        return this.id
     }
 
     init = () => {};
