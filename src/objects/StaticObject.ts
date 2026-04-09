@@ -7,8 +7,7 @@ import type { LifeTimeObject, Textures } from "../types/types";
  * Base class to create static object, such as floor or walls. It uses a Mesh standard material
  */
 export default abstract class StaticObject implements LifeTimeObject {
-  declare experience: Experience
-  declare scene: THREE.Scene;
+  private scene: THREE.Scene;
   declare resources: Resources;
   declare geometry: THREE.BufferGeometry;
   declare textures: Textures
@@ -20,8 +19,7 @@ export default abstract class StaticObject implements LifeTimeObject {
 
 
   constructor(textures?: Textures, receiveShadows: boolean = false, castShadow: boolean = false) {
-    if (!Experience.instance) throw new Error("StaticObject initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating a StaticObject."  
-    );
+    if (!Experience.instance) throw new Error("StaticObject initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating a StaticObject.");
     
     if (textures) {
       this.textures = textures
@@ -29,7 +27,6 @@ export default abstract class StaticObject implements LifeTimeObject {
     this.receiveShadows = receiveShadows
     this.castShadow = castShadow
     
-
     this.scene = Experience.instance.scene;
     this.resources = Experience.instance.resources;
   
@@ -38,7 +35,7 @@ export default abstract class StaticObject implements LifeTimeObject {
     this.setMaterial();
     this.setMesh();
   }
-  
+
   getId(): string {
       return this.Id
   }

@@ -22,7 +22,7 @@ export default class CollisionManager implements LifeTimeObject {
         const addedObjects: (StaticObject | Actor)[] = []
         objects.forEach(object => {
             if (object instanceof StaticObject) {
-                this.worldOctree.fromGraphNode(object.scene)
+                this.worldOctree.fromGraphNode(object.mesh)
             }
             else {
                 if (!object.collisionResource) {
@@ -55,7 +55,7 @@ export default class CollisionManager implements LifeTimeObject {
                 this.worldOctree.fromGraphNode(object.collisionResource.scene)
             }
             else {
-                this.worldOctree.fromGraphNode(object.scene)
+                this.worldOctree.fromGraphNode(object.mesh)
             }
         })
     }
