@@ -95,26 +95,33 @@ export default class Actor implements LifeTimeObject
 
     setRotation(x: number, y: number, z: number) {
         this.model.rotation.set(x,y,z)
-        if (this.colliderModel)
+        if (this.colliderModel) {
             this.colliderModel.rotation.set(x,y,z)
-        if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
-        this.experience.collisionManager?.rebuildCollisions()
+
+            if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
+            this.experience.collisionManager?.rebuildCollisions()
+        }
     }
 
     setPosition(x: number, y: number, z: number) {
         this.model.position.set(x,y,z)
-        if (this.colliderModel)
+        if (this.colliderModel) {
             this.colliderModel.position.set(x,y,z)
-        if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
-        this.experience.collisionManager?.rebuildCollisions()
+            
+            if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
+            this.experience.collisionManager?.rebuildCollisions()
+        }
     }
 
     setScale(x: number, y: number, z: number) {
         this.model.scale.set(x,y,z)
-        if (this.colliderModel)
+        if (this.colliderModel) {
             this.colliderModel.scale.set(x,y,z)
-        if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
-        this.experience.collisionManager?.rebuildCollisions()
+
+            if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
+
+            this.experience.collisionManager?.rebuildCollisions()
+        }
     }
 
     setColliderModel(makeUnique: boolean) {
