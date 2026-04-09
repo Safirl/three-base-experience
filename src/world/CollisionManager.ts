@@ -1,18 +1,16 @@
 import type { LifeTimeObject } from "../types/types";
 import { Octree } from "three/examples/jsm/Addons.js";
 import Experience from "../experience/Experience";
-import type Resources from "../utils/Resources";
-import type Actor from "../objects/Actor";
+import Actor from "../objects/Actor";
+import StaticObject from "../objects/StaticObject";
 
 export default class CollisionManager implements LifeTimeObject {
     declare worldOctree: Octree;
-    declare currentCollisionObjects: Actor[]
+    declare currentCollisionObjects: (StaticObject | Actor)[]
     declare experience: Experience
-    declare resources: Resources
     constructor() {
         if (!Experience.instance) throw new Error("Environment initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating the Environment.");
         this.experience = Experience.instance
-        this.resources = this.experience.resources
         this.worldOctree = new Octree();
     }
 
@@ -20,24 +18,31 @@ export default class CollisionManager implements LifeTimeObject {
     update = () => {};
     destroy = () => {};
 
-    addCollisionObject(objects: Actor[]) {
-        const addedObjects: Actor[] = []
+    addCollisionObject(objects: (StaticObject | Actor)[]) {
+        const addedObjects: (StaticObject | Actor)[] = []
         objects.forEach(object => {
-            if (!object.collisionResource) {
-                console.warn("Invalid object collision found for: ", object)
-                return;
+            if (object instanceof StaticObject) {
+                this.worldOctree.fromGraphNode(object.scene)
+            }
+            else {
+                if (!object.collisionResource) {
+                    console.warn("Invalid object collision found for: ", object)
+                    return;
+                }
+                this.worldOctree.fromGraphNode(object.collisionResource.scene)
             }
             addedObjects.push(object)
-            this.worldOctree.fromGraphNode(object.collisionResource.scene)
         });
         this.currentCollisionObjects = this.currentCollisionObjects.concat(addedObjects)
     }
 
-    removeCollisionObject(objects: Actor[]) {
+    removeCollisionObject(objects: (StaticObject | Actor)[]) {
         objects.forEach((object => {
-            if (!object.collisionResource) {
-                console.warn("Invalid object collision found for: ", object)
-                return;
+            if (object instanceof Actor) {
+                if (!object.collisionResource) {
+                    console.warn("Invalid object collision found for: ", object)
+                    return;
+                }
             }
             const index = this.currentCollisionObjects.findIndex((o) => o.getId() === object.getId());
             if (index > -1) { 
@@ -46,7 +51,12 @@ export default class CollisionManager implements LifeTimeObject {
         }))
         this.worldOctree.clear()
         this.currentCollisionObjects.forEach((object) => {
-            this.worldOctree.fromGraphNode(object.collisionResource.scene)
+            if (object instanceof Actor) {
+                this.worldOctree.fromGraphNode(object.collisionResource.scene)
+            }
+            else {
+                this.worldOctree.fromGraphNode(object.scene)
+            }
         })
     }
 }

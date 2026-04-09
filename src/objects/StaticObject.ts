@@ -16,6 +16,8 @@ export default abstract class StaticObject implements LifeTimeObject {
   declare mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
   declare receiveShadows: boolean
   declare castShadow: boolean
+  private Id: string = crypto.randomUUID()
+
 
   constructor(textures?: Textures, receiveShadows: boolean = false, castShadow: boolean = false) {
     if (!Experience.instance) throw new Error("StaticObject initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating a StaticObject."  
@@ -35,6 +37,10 @@ export default abstract class StaticObject implements LifeTimeObject {
     this.setTextures();
     this.setMaterial();
     this.setMesh();
+  }
+  
+  getId(): string {
+      return this.Id
   }
 
   init(){};
