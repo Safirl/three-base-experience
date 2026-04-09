@@ -23,6 +23,7 @@ export { default as Debug } from './utils/Debug'
 export { default as World } from './world/World'
 export { default as Environment } from './world/Environment'
 export { default as EnvironmentMap } from './world/EnvironmentMap'
+export { default as CollisionManager} from './world/CollisionManager'
 
 // Types
 export type { Source } from './types/types'

@@ -9,6 +9,7 @@ import World from "../world/World";
 import Debug from "../utils/Debug";
 import InputSystem from "../inputs/InputSystem";
 import Stats from 'three/addons/libs/stats.module.js';
+import CollisionManager from "../world/CollisionManager";
 
 export default class Experience implements LifeTimeObject {
   declare canvas: HTMLCanvasElement;
@@ -21,6 +22,7 @@ export default class Experience implements LifeTimeObject {
   declare world: World;
   declare debug: Debug;
   declare inputSystem: InputSystem
+  declare collisionManager: CollisionManager
 
   static instance: Experience | null = null
 
@@ -46,6 +48,7 @@ export default class Experience implements LifeTimeObject {
     this.scene = new THREE.Scene();
     this.resources = new Resources(sources);
     this.inputSystem = new InputSystem();
+    this.collisionManager = new CollisionManager();
     
     /**
      * constructor parameter values

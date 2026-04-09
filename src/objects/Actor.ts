@@ -17,14 +17,16 @@ export default class Actor implements LifeTimeObject
     declare scene: THREE.Scene
     declare resources: Resources
     declare resource: GLTF
+    declare collisionResource: GLTF
     declare model: THREE.Object3D
     declare animation: Animation
     declare time: Time
     declare debug: Debug
     declare debugFolder: GUI
     declare name: string
+    private Id: string = crypto.randomUUID()
 
-    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false) 
+    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false, collisionResource?: GLTF) 
     {
         if (!Experience.instance) throw new Error("Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.");
         
@@ -41,10 +43,17 @@ export default class Actor implements LifeTimeObject
         this.time = this.experience.time
         // Setup
         this.resource = resource
+        if (collisionResource) {
+            this.collisionResource = collisionResource
+        }
 
         this.setModel(makeUnique, makeMaterialsUnique)
         this.setAnimation()
         this.setDebugObject()
+    }
+
+    getId(): string {
+        return this.Id
     }
 
     init = () => {};
