@@ -30,7 +30,7 @@ export default class CollisionManager implements LifeTimeObject {
                     console.warn("Invalid object collision found for: ", object)
                     return;
                 }
-                this.worldOctree.fromGraphNode(object.collisionResource.scene)
+                this.worldOctree.fromGraphNode(object.colliderModel)
             }
             addedObjects.push(object)
         });
@@ -53,7 +53,7 @@ export default class CollisionManager implements LifeTimeObject {
         this.worldOctree.clear()
         this.currentCollisionObjects.forEach((object) => {
             if (object instanceof Actor) {
-                this.worldOctree.fromGraphNode(object.collisionResource.scene.clone())
+                this.worldOctree.fromGraphNode(object.colliderModel)
             }
             else {
                 this.worldOctree.fromGraphNode(object.mesh)
