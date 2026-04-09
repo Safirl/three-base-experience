@@ -19,6 +19,7 @@ export default class Actor implements LifeTimeObject
     declare resource: GLTF
     declare collisionResource: GLTF
     declare model: THREE.Object3D
+    declare colliderModel: THREE.Object3D
     declare animation: Animation
     declare time: Time
     declare debug: Debug
@@ -28,8 +29,7 @@ export default class Actor implements LifeTimeObject
 
     constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false, collisionResource?: GLTF) 
     {
-        if (!Experience.instance) throw new Error("Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.");
-        
+        if (!Experience.instance) throw new Error("Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.");        
 
         this.experience = Experience.instance
         this.debug = this.experience.debug
@@ -45,6 +45,7 @@ export default class Actor implements LifeTimeObject
         this.resource = resource
         if (collisionResource) {
             this.collisionResource = collisionResource
+            this.setColliderModel(makeUnique)
         }
 
         this.setModel(makeUnique, makeMaterialsUnique)
@@ -57,12 +58,23 @@ export default class Actor implements LifeTimeObject
     }
 
     init = () => {};
-    destroy = () => {};
+    destroy = () => {
+        this.model.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                child.geometry.dispose();
+                for (const key in child.material) {
+                    const value = child.material[key];
+                    if (value && typeof value.dispose === "function") {
+                    value.dispose();
+                    }
+                }
+            }
+        })
+    };
 
     setModel(makeUnique: boolean, makeMaterialsUnique: boolean) {
         if (makeUnique)
             this.model = SkeletonUtils.clone(this.resource.scene);
-            // this.model = this.resource.scene.clone()
         else
             this.model = this.resource.scene
 
@@ -79,6 +91,15 @@ export default class Actor implements LifeTimeObject
                 child = child.clone()
             }
         })
+    }
+
+    setColliderModel(makeUnique: boolean) {
+        if (makeUnique)
+            this.colliderModel = SkeletonUtils.clone(this.collisionResource.scene);
+        else
+            this.colliderModel = this.collisionResource.scene
+
+        this.model.add(this.colliderModel)
     }
 
     setAnimation() {

@@ -53,7 +53,7 @@ export default class CollisionManager implements LifeTimeObject {
         this.worldOctree.clear()
         this.currentCollisionObjects.forEach((object) => {
             if (object instanceof Actor) {
-                this.worldOctree.fromGraphNode(object.collisionResource.scene)
+                this.worldOctree.fromGraphNode(object.collisionResource.scene.clone())
             }
             else {
                 this.worldOctree.fromGraphNode(object.mesh)
