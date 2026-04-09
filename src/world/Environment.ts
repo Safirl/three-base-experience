@@ -9,15 +9,11 @@ export default class Environment {
   declare scene: Experience["scene"];
   declare sunLight: THREE.DirectionalLight;
   declare resources: Experience["resources"];
-  declare environmentMap: {
-    texture: THREE.CubeTexture;
-    intensity: number;
-    updateMaterials: () => void;
-  };
+  declare environmentMap: EnvironmentMap;
   declare debug: Debug
   declare debugFolder: GUI
 
-  constructor(environmentMap?: THREE.CubeTexture) {
+  constructor(lightingEnvironmentMap?: THREE.CubeTexture, useAsBackground: boolean = false, backgroundEnvironmentMap?: THREE.CubeTexture) {
     if (!Experience.instance) throw new Error("Environment initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating the Environment.");
 
     this.experience = Experience.instance;
@@ -31,7 +27,9 @@ export default class Environment {
     }
 
     this.setSunlight();
-    this.setEnvironmentMap();
+    if (lightingEnvironmentMap) 
+      this.setEnvironmentMap(lightingEnvironmentMap, useAsBackground, backgroundEnvironmentMap);
+
     this.setDebugObject();
   }
 
@@ -45,9 +43,11 @@ export default class Environment {
     this.scene.add(this.sunLight);
   }
 
-  setEnvironmentMap() {
-    if (!this.resources.items.environmentMapTexture) return;
-    this.environmentMap = new EnvironmentMap(.5, this.resources.items.environmentMapTexture as THREE.CubeTexture, this.scene)
+  setEnvironmentMap(lightingEnvironmentMap: THREE.CubeTexture, useAsBackground: boolean = false, backgroundEnvironmentMap?: THREE.CubeTexture) {
+    this.environmentMap = new EnvironmentMap(.5, lightingEnvironmentMap, this.scene, useAsBackground)
+    if (useAsBackground && backgroundEnvironmentMap) {
+      this.environmentMap.setBackgroundEnvironment(backgroundEnvironmentMap)
+    }
     this.environmentMap.texture.colorSpace = THREE.SRGBColorSpace;
 
     this.environmentMap.updateMaterials();

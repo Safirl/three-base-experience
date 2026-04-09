@@ -65,7 +65,7 @@ export default class Actor implements LifeTimeObject
                 for (const key in child.material) {
                     const value = child.material[key];
                     if (value && typeof value.dispose === "function") {
-                    value.dispose();
+                        value.dispose();
                     }
                 }
             }
@@ -93,12 +93,35 @@ export default class Actor implements LifeTimeObject
         })
     }
 
+    setRotation(x: number, y: number, z: number) {
+        this.model.rotation.set(x,y,z)
+        if (this.colliderModel)
+            this.colliderModel.rotation.set(x,y,z)
+        if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
+        this.experience.collisionManager?.rebuildCollisions()
+    }
+
+    setPosition(x: number, y: number, z: number) {
+        this.model.position.set(x,y,z)
+        if (this.colliderModel)
+            this.colliderModel.position.set(x,y,z)
+        if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
+        this.experience.collisionManager?.rebuildCollisions()
+    }
+
+    setScale(x: number, y: number, z: number) {
+        this.model.scale.set(x,y,z)
+        if (this.colliderModel)
+            this.colliderModel.scale.set(x,y,z)
+        if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
+        this.experience.collisionManager?.rebuildCollisions()
+    }
+
     setColliderModel(makeUnique: boolean) {
         if (makeUnique)
             this.colliderModel = SkeletonUtils.clone(this.collisionResource.scene);
         else
             this.colliderModel = this.collisionResource.scene
-        this.model.add(this.colliderModel)
     }
 
     setAnimation() {

@@ -5,7 +5,7 @@ export default class EnvironmentMap {
     declare texture: THREE.CubeTexture
     declare scene: THREE.Scene
 
-    constructor(intensity: number, texture: THREE.CubeTexture, scene: THREE.Scene) {
+    constructor(intensity: number, texture: THREE.CubeTexture, scene: THREE.Scene, useAsBackground: boolean = false) {
         if (!texture || !scene) {
             console.error("Invalid texture or scene when instantiating environment map")
             return;
@@ -14,6 +14,17 @@ export default class EnvironmentMap {
         this.texture = texture
         this.scene = scene
         this.scene.environment = this.texture;
+        if (useAsBackground) this.setBackgroundEnvironment(texture)
+    }
+
+    setBackgroundEnvironment(texture: THREE.CubeTexture) {
+      this.scene.background = texture;
+    }
+
+    setEnvironmentMap(texture: THREE.CubeTexture) {
+      this.texture = texture
+      this.scene.environment = texture;
+      this.updateMaterials()
     }
 
     updateMaterials = () => {

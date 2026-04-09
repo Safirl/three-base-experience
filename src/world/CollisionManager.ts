@@ -19,7 +19,7 @@ export default class CollisionManager implements LifeTimeObject {
     update = () => {};
     destroy = () => {};
 
-    addCollisionObject(objects: (StaticObject | Actor)[]) {
+    addCollisionObjects(objects: (StaticObject | Actor)[]) {
         const addedObjects: (StaticObject | Actor)[] = []
         objects.forEach(object => {
             if (object instanceof StaticObject) {
@@ -37,7 +37,19 @@ export default class CollisionManager implements LifeTimeObject {
         this.currentCollisionObjects = this.currentCollisionObjects.concat(addedObjects)
     }
 
-    removeCollisionObject(objects: (StaticObject | Actor)[]) {
+    rebuildCollisions() {
+        this.worldOctree.clear()
+        this.currentCollisionObjects.forEach((object) => {
+            if (object instanceof Actor) {
+                this.worldOctree.fromGraphNode(object.colliderModel)
+            }
+            else {
+                this.worldOctree.fromGraphNode(object.mesh)
+            }
+        })
+    }
+
+    removeCollisionObjects(objects: (StaticObject | Actor)[]) {
         objects.forEach((object => {
             if (object instanceof Actor) {
                 if (!object.collisionResource) {
@@ -50,14 +62,6 @@ export default class CollisionManager implements LifeTimeObject {
                 this.currentCollisionObjects.splice(index, 1); 
             }
         }))
-        this.worldOctree.clear()
-        this.currentCollisionObjects.forEach((object) => {
-            if (object instanceof Actor) {
-                this.worldOctree.fromGraphNode(object.colliderModel)
-            }
-            else {
-                this.worldOctree.fromGraphNode(object.mesh)
-            }
-        })
+        this.rebuildCollisions()
     }
 }

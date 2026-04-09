@@ -14,6 +14,18 @@ const templateSources: Source[] = [
     ],
   },
   {
+    name: "environmentMapTexture1",
+    type: "cubeTexture",
+    path: [
+      "textures/environmentMap/1/px.png",
+      "textures/environmentMap/1/nx.png",
+      "textures/environmentMap/1/py.png",
+      "textures/environmentMap/1/ny.png",
+      "textures/environmentMap/1/pz.png",
+      "textures/environmentMap/1/nz.png",
+    ],
+  },
+  {
     name: "grassColorTexture",
     type: "texture",
     path: "textures/dirt/color.jpg",

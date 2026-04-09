@@ -4,6 +4,7 @@ import Floor from "./Floor";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import Actor from "../objects/Actor";
 import World from "../world/World";
+import * as THREE from "three"
 
 export default class TemplateWorld extends World{
   declare experience: Experience;
@@ -19,16 +20,13 @@ export default class TemplateWorld extends World{
     this.floor = new Floor();
     //Fox is just an actor because it doesn't have any logic in it.
     this.fox = new Actor("fox", this.resources.items.foxModel as GLTF, true, false, this.resources.items.foxModel as GLTF)
-    this.fox.model.scale.set(0.02, 0.02, 0.02)
-    this.fox1 = new Actor("fox", this.resources.items.foxModel as GLTF, true)
-    this.fox1.model.scale.set(0.02, 0.02, 0.02)
-    this.environment = new Environment();
+    this.fox.setScale(.02,.02,.02)
+    this.environment = new Environment(this.resources.items.environmentMapTexture1 as THREE.CubeTexture, false);
   }
 
   update() {
     if (this.fox) {
       this.fox.update()
-      this.fox1.update()
     }
   }
 }
