@@ -37,7 +37,7 @@ export default class Actor implements LifeTimeObject
             this.debugFolder = this.debug.ui.addFolder(name)
             this.debugFolder.close()
         }
-
+        this.name = name;
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.time = this.experience.time
