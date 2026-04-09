@@ -12,6 +12,7 @@ export default class CollisionManager implements LifeTimeObject {
         if (!Experience.instance) throw new Error("Environment initialization failed: Experience.instance is not available. Make sure Experience is initialized before creating the Environment.");
         this.experience = Experience.instance
         this.worldOctree = new Octree();
+        this.currentCollisionObjects = []
     }
 
     init = () => {};
