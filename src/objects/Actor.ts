@@ -85,6 +85,7 @@ export default class Actor implements LifeTimeObject
             if(child instanceof THREE.Mesh)
             {
                 child.castShadow = true
+                child.receiveShadow = true
             }
             if (makeMaterialsUnique && child instanceof THREE.Material)
             {

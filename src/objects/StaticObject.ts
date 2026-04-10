@@ -111,6 +111,7 @@ export default abstract class StaticObject implements LifeTimeObject {
   }
 
   setMesh() {
+    if (!this.geometry || !this.material) console.warn("Can't instantiate mesh: Geometry or material is not valid for", this)
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.rotation.x = -Math.PI * 0.5;
     this.mesh.position.y = -0.001;
