@@ -8,7 +8,6 @@ import Time from "../utils/Time";
 import World from "../world/World";
 import Debug from "../utils/Debug";
 import InputSystem from "../inputs/InputSystem";
-import Stats from 'three/addons/libs/stats.module.js';
 import CollisionManager from "../world/CollisionManager";
 
 export default class Experience implements LifeTimeObject {
