@@ -20,6 +20,8 @@ export default {
             external: ['three', 'three/examples/jsm/Addons.js', 'lil-gui'],
         },
         sourcemap: true,
+        minify: false,
+        target: 'esnext'
     },
     plugins:
     [

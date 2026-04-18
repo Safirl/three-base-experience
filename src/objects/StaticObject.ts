@@ -7,7 +7,7 @@ import type { LifeTimeObject, Textures } from "../types/types";
  * Base class to create static object, such as floor or walls. It uses a Mesh standard material
  */
 export default abstract class StaticObject implements LifeTimeObject {
-  private scene: THREE.Scene;
+  protected scene: THREE.Scene;
   declare resources: Resources;
   declare geometry: THREE.BufferGeometry;
   declare textures: Textures
