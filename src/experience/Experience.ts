@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import Camera from "./Camera";
-import Renderer from "../Renderer";
+import Renderer from "./Renderer";
 import { type LifeTimeObject, type Source } from "../types/types";
 import Resources from "../utils/Resources";
 import Sizes from "../utils/Sizes";
@@ -9,30 +9,39 @@ import World from "../world/World";
 import Debug from "../utils/Debug";
 import InputSystem from "../inputs/InputSystem";
 import CollisionManager from "../world/CollisionManager";
+import Stats from "three/addons/libs/stats.module.js";
 
 export default class Experience implements LifeTimeObject {
   declare canvas: HTMLCanvasElement;
   declare sizes: Sizes;
   declare time: Time;
   declare scene: THREE.Scene;
+  declare sources: Source[];
   declare resources: Resources;
   declare camera: Camera;
   declare renderer: Renderer;
   declare world: World;
   declare debug: Debug;
-  declare inputSystem: InputSystem
-  declare collisionManager: CollisionManager
+  declare inputSystem: InputSystem;
+  declare collisionManager: CollisionManager;
+  public areResourcesLoaded: boolean = false;
+  declare public stats: Stats;
 
-  static instance: Experience | null = null
+  static instance: Experience | null = null;
 
-  constructor(canvas: HTMLCanvasElement, sources: Source[], camera: Camera, world: World) {
-    //Singleton. That means you can't instantiate multiple experiences. 
-    if(Experience.instance)
-    {
+  constructor(
+    canvas: HTMLCanvasElement,
+    sources: Source[],
+    camera: Camera,
+    world: World,
+  ) {
+    //Singleton. That means you can't instantiate multiple experiences.
+    if (Experience.instance) {
       return;
     }
-    Experience.instance = this
-    
+
+    Experience.instance = this;
+
     // Global access (replaced by the static instance property)
     //@ts-ignore
     window.experience = this;
@@ -45,47 +54,50 @@ export default class Experience implements LifeTimeObject {
     this.sizes = new Sizes();
     this.time = new Time();
     this.scene = new THREE.Scene();
-    this.resources = new Resources(sources);
+    this.sources = sources;
     this.inputSystem = new InputSystem();
     this.collisionManager = new CollisionManager();
-    
+
     /**
      * constructor parameter values
-    */
-   this.camera = camera
-   this.world = world
-   
-   this.renderer = new Renderer();
-   
-   // Sizes resize event
-   this.sizes.on("resize", () => {
-     this.resize();
+     */
+    this.camera = camera;
+    this.world = world;
+
+    this.renderer = new Renderer();
+
+    // Sizes resize event
+    this.sizes.on("resize", () => {
+      this.resize();
     });
-    
-    this.resources.on("ready", () => this.onResourcesLoaded());
-    
-    this.displayPerformances()
+    if (this.debug.active) {
+      this.displayPerformances();
+    }
     console.log("Experience class instantiated");
   }
 
+  loadAsync = async (sources: Source[]) => {
+    this.resources = new Resources(sources);
+    await this.resources.startLoading();
+  };
+
   displayPerformances() {
-    // if (this.debug.active)
-    return;
+    this.stats = new Stats();
+    document.body.appendChild(this.stats.dom);
   }
-  
+
   /**
-   * Init classes only when the resources are loaded
-  */
- onResourcesLoaded() {
+   * Load the sources and init classes.
+   */
+  init = async () => {
+    await this.loadAsync(this.sources);
     this.time.on("tick", () => {
       this.update();
     });
-    // Time tick event
-    this.camera.init()
-    this.world.init()
-  }
-
-  init = () => {}
+    this.camera.init();
+    this.world.init();
+    this.areResourcesLoaded = true;
+  };
 
   resize() {
     this.camera.resize();
@@ -93,10 +105,11 @@ export default class Experience implements LifeTimeObject {
   }
 
   update() {
+    this.stats?.update();
     this.camera.update();
     this.world.update();
-    this.renderer.update();
     this.inputSystem.update();
+    this.renderer.update();
   }
 
   destroy() {
@@ -121,7 +134,7 @@ export default class Experience implements LifeTimeObject {
     this.sizes.destroy();
     this.renderer.instance.dispose();
     if (this.debug.active) {
-      this.debug.ui.destroy()
+      this.debug.ui.destroy();
     }
 
     this.inputSystem.destroy();

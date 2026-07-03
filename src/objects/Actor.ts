@@ -1,5 +1,5 @@
 import Experience from "../experience/Experience";
-import * as THREE from "three"
+import * as THREE from "three";
 import type Resources from "../utils/Resources";
 import { SkeletonUtils, type GLTF } from "three/examples/jsm/Addons.js";
 import type Time from "../utils/Time";
@@ -11,155 +11,175 @@ import type { LifeTimeObject } from "../types/types";
 /**
  * Base class for animated 3D objects. Auto creates a debug folder to play animations.
  */
-export default class Actor implements LifeTimeObject
-{
-    declare experience: Experience
-    declare scene: THREE.Scene
-    declare resources: Resources
-    declare resource: GLTF
-    declare collisionResource: GLTF
-    declare model: THREE.Object3D
-    declare colliderModel: THREE.Object3D
-    declare animation: Animation
-    declare time: Time
-    declare debug: Debug
-    declare debugFolder: GUI
-    declare name: string
-    private id: string = crypto.randomUUID()
+export default class Actor implements LifeTimeObject {
+  declare experience: Experience;
+  declare scene: THREE.Scene;
+  declare resources: Resources;
+  declare resource: GLTF;
+  declare collisionResource: GLTF;
+  declare model: THREE.Object3D;
+  declare colliderModel: THREE.Object3D;
+  declare animation: Animation;
+  declare time: Time;
+  declare debug: Debug;
+  declare debugFolder: GUI;
+  declare name: string;
+  private id: string = crypto.randomUUID();
 
-    constructor(name: string, resource: GLTF, makeUnique: boolean = false, makeMaterialsUnique: boolean = false, collisionResource?: GLTF) 
-    {
-        if (!Experience.instance) throw new Error("Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.");        
+  constructor(
+    name: string,
+    resource: GLTF,
+    autoAddToScene: boolean = true,
+    makeUnique: boolean = false,
+    collisionResource?: GLTF,
+  ) {
+    if (!Experience.instance)
+      throw new Error(
+        "Actor initialization failed: Experience.instance is not available. Ensure Experience is initialized before creating Actor.",
+      );
 
-        this.experience = Experience.instance
-        this.debug = this.experience.debug
-        if (this.debug.active) {
-            this.debugFolder = this.debug.ui.addFolder(name)
-            this.debugFolder.close()
+    this.experience = Experience.instance;
+    this.debug = this.experience.debug;
+    if (this.debug.active) {
+      this.debugFolder = this.debug.ui.addFolder(name);
+      this.debugFolder.close();
+    }
+    this.name = name;
+    this.scene = this.experience.scene;
+    this.resources = this.experience.resources;
+    this.time = this.experience.time;
+    // Setup
+    this.resource = resource;
+
+    this.setModel(makeUnique);
+    if (autoAddToScene) {
+      this.scene.add(this.model);
+    }
+    if (collisionResource) {
+      this.collisionResource = collisionResource;
+      this.setColliderModel();
+    }
+    this.setAnimation();
+    this.setDebugObject();
+  }
+
+  getId(): string {
+    return this.id;
+  }
+
+  init = () => {};
+  destroy = () => {
+    this.model.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.geometry.dispose();
+        for (const key in child.material) {
+          const value = child.material[key];
+          if (value && typeof value.dispose === "function") {
+            value.dispose();
+          }
         }
-        this.name = name;
-        this.scene = this.experience.scene
-        this.resources = this.experience.resources
-        this.time = this.experience.time
-        // Setup
-        this.resource = resource
-        
-        this.setModel(makeUnique, makeMaterialsUnique)
-        if (collisionResource) {
-            this.collisionResource = collisionResource
-            this.setColliderModel(makeUnique)
-        }
-        this.setAnimation()
-        this.setDebugObject()
+      }
+    });
+  };
+
+  setModel(makeUnique: boolean) {
+    if (makeUnique) this.model = SkeletonUtils.clone(this.resource.scene);
+    else this.model = this.resource.scene;
+    this.model.name = this.name;
+
+    this.model.traverse((child: any) => {
+      if (child instanceof THREE.Mesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+      const material = child.material as THREE.Material;
+      if (!material) return;
+      if (material instanceof THREE.MeshStandardMaterial) {
+        const envMap = this.experience.world.environment.environmentMap;
+        child.material.envMap = envMap.texture;
+        child.material.envMapIntensity = envMap.intensity;
+        child.material.needsUpdate = true;
+      }
+      if (material.transparent) {
+        material.transparent = false;
+        material.alphaTest = 0.5;
+        material.depthWrite = true;
+      }
+    });
+  }
+
+  setRotation(x: number, y: number, z: number) {
+    this.model.rotation.set(x, y, z);
+    if (this.colliderModel) {
+      this.colliderModel.rotation.set(x, y, z);
+
+      if (!this.experience.collisionManager)
+        throw new Error(
+          `Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`,
+        );
+      this.experience.collisionManager?.rebuildCollisions();
     }
+  }
 
-    getId(): string {
-        return this.id
+  setPosition(x: number, y: number, z: number) {
+    this.model.position.set(x, y, z);
+    if (this.colliderModel) {
+      this.colliderModel.position.set(x, y, z);
+
+      if (!this.experience.collisionManager)
+        throw new Error(
+          `Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`,
+        );
+      this.experience.collisionManager?.rebuildCollisions();
     }
+  }
 
-    init = () => {};
-    destroy = () => {
-        this.model.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
-                child.geometry.dispose();
-                for (const key in child.material) {
-                    const value = child.material[key];
-                    if (value && typeof value.dispose === "function") {
-                        value.dispose();
-                    }
-                }
-            }
-        })
-    };
+  setScale(x: number, y: number, z: number) {
+    this.model.scale.set(x, y, z);
+    if (this.colliderModel) {
+      this.colliderModel.scale.set(x, y, z);
 
-    setModel(makeUnique: boolean, makeMaterialsUnique: boolean) {
-        if (makeUnique)
-            this.model = SkeletonUtils.clone(this.resource.scene);
-        else
-            this.model = this.resource.scene
+      if (!this.experience.collisionManager)
+        throw new Error(
+          `Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`,
+        );
 
-        this.scene.add(this.model)
-
-        this.model.traverse((child: any) =>
-        {
-            if(child instanceof THREE.Mesh)
-            {
-                child.castShadow = true
-                child.receiveShadow = true
-            }
-            if (makeMaterialsUnique && child instanceof THREE.Material)
-            {
-                child = child.clone()
-            }
-        })
+      this.experience.collisionManager?.rebuildCollisions();
     }
+  }
 
-    setRotation(x: number, y: number, z: number) {
-        this.model.rotation.set(x,y,z)
-        if (this.colliderModel) {
-            this.colliderModel.rotation.set(x,y,z)
+  setColliderModel() {
+    this.colliderModel = SkeletonUtils.clone(this.collisionResource.scene);
+  }
 
-            if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
-            this.experience.collisionManager?.rebuildCollisions()
-        }
-    }
+  setAnimation() {
+    this.animation = new Animation();
+    this.animation.mixer = new THREE.AnimationMixer(this.model);
+    this.animation.actions = [];
+    this.resource.animations.forEach((animation) => {
+      this.animation.actions.push({
+        name: animation.name,
+        action: this.animation.mixer.clipAction(animation),
+      });
+    });
+    this.animation.currentAction = this.animation.actions[0];
+    this.animation.currentAction?.action.play();
+  }
 
-    setPosition(x: number, y: number, z: number) {
-        this.model.position.set(x,y,z)
-        if (this.colliderModel) {
-            this.colliderModel.position.set(x,y,z)
-            
-            if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
-            this.experience.collisionManager?.rebuildCollisions()
-        }
-    }
+  setDebugObject() {
+    if (!this.debug.active) return;
 
-    setScale(x: number, y: number, z: number) {
-        this.model.scale.set(x,y,z)
-        if (this.colliderModel) {
-            this.colliderModel.scale.set(x,y,z)
+    const debugObject: { [key: string]: () => void } = {};
+    this.animation.actions.forEach((action) => {
+      const actionName = action.name;
+      debugObject[actionName] = () => {
+        this.animation.play(actionName, false);
+      };
+      this.debugFolder.add(debugObject, actionName).name(`Play ${actionName}`);
+    });
+  }
 
-            if (!this.experience.collisionManager) throw new Error(`Can't rebuild collisions after rotating: ${this.name}. Collision manager is not valid`)
-
-            this.experience.collisionManager?.rebuildCollisions()
-        }
-    }
-
-    setColliderModel(makeUnique: boolean) {
-        if (makeUnique)
-            this.colliderModel = SkeletonUtils.clone(this.collisionResource.scene);
-        else
-            this.colliderModel = this.collisionResource.scene
-    }
-
-    setAnimation() {
-        this.animation = new Animation()
-        this.animation.mixer = new THREE.AnimationMixer(this.model)
-        this.animation.actions = []
-        this.resource.animations.forEach((animation) => {
-            this.animation.actions.push({name: animation.name, action: this.animation.mixer.clipAction(animation)})
-        })
-        this.animation.currentAction = this.animation.actions[0]
-        this.animation.currentAction?.action.play()
-    }
-
-    setDebugObject() {
-        if (!this.debug.active) return;
-
-        const debugObject: { [key: string]: () => void } = {}
-        this.animation.actions.forEach((action) => {
-            const actionName = action.name
-            debugObject[actionName] = () =>
-            {
-                this.animation.play(actionName)
-            }
-            this.debugFolder
-                .add(debugObject, actionName)
-                .name(`Play ${actionName}`)
-        })
-    }
-
-    update() {
-        this.animation.mixer.update(this.time.delta * .001)
-    }
+  update() {
+    this.animation.mixer.update(this.time.delta * 0.001);
+  }
 }

@@ -1,28 +1,22 @@
-import './reset.css'
-import './style.css'
-import Experience from './experience/Experience'
-import templateSources from './template/templateSources'
-import OrbitCamera from './template/OrbitCamera'
-import TemplateWorld from './template/TemplateWorld'
+import "./reset.css";
+import "./style.css";
+import Experience from "./experience/Experience";
+import templateSources from "./template/templateSources";
+import OrbitCamera from "./template/OrbitCamera";
+import TemplateWorld from "./template/TemplateWorld";
 
-const init = () => {
-  const canvas: HTMLCanvasElement = document.getElementById("three") as HTMLCanvasElement
-  if (!canvas) {
-    throw new Error("Canvas not found: no element with id 'three' exists in the DOM.");
-  }
-  
-  canvas.style.width = "100%"
-  canvas.style.height = "100%"
-  const camera = new OrbitCamera()
-  const world = new TemplateWorld()
-  new Experience(canvas, templateSources, camera, world)
-  // const profiles: InputProfile[] = [keyboardProfile, BitControllerProfile]
+const canvas: HTMLCanvasElement = document.getElementById(
+  "three",
+) as HTMLCanvasElement;
+if (!canvas) {
+  throw new Error(
+    "Canvas not found: no element with id 'three' exists in the DOM.",
+  );
+}
 
-  // experience.inputSystem.addInputProfiles(profiles)
-  // experience.inputSystem.on("jump", (args: InputEventArgs) => {
-  //   const gamepad = args.controller as Gamepad
-  //   console.log("controller: ", gamepad.id, " triggered: ", args.type)
-  // })
-}  
-
-init()
+canvas.style.width = "100%";
+canvas.style.height = "100%";
+const camera = new OrbitCamera();
+const world = new TemplateWorld();
+const experience = new Experience(canvas, templateSources, camera, world);
+await experience.init();
