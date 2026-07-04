@@ -10,7 +10,7 @@ npm i https://github.com/Safirl/three-base-experience.git
 Make sure your project also has the required peer dependencies:
 
 ```bash
-npm i three lil-gui
+npm i three lil-gui vite-plugin-restart vite-plugin-dts
 ```
 
 > **Note:** Add a `<canvas id="three">` to your HTML and a `reset.css` that sets `html, body { margin: 0; width: 100%; height: 100%; }` to avoid unwanted scrollbars.

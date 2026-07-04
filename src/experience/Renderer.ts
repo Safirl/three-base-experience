@@ -7,6 +7,10 @@ import {
   type Pass,
 } from "three/examples/jsm/Addons.js";
 
+/**
+ * Instantiate a WebGLRenderTarget. If a pass is added, a composer is instantiated and used for the render instead of the classic renderer.
+ */
+
 export default class Renderer {
   declare experience: Experience;
   declare canvas: Experience["canvas"];
