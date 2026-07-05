@@ -82,7 +82,10 @@ mkdir -p "$PLUGINS_DIR"
 # On utilise node pour parser proprement le JSON (déjà présent dans un projet vite)
 # et on récupère une URL par ligne.
 
-mapfile -t PLUGIN_URLS < <(node -e "
+PLUGIN_URLS=()
+while IFS= read -r line; do
+  [[ -n "$line" ]] && PLUGIN_URLS+=("$line")
+done < <(node -e "
   const fs = require('fs');
   const raw = fs.readFileSync(process.argv[1], 'utf8');
   let data;
@@ -110,6 +113,18 @@ fi
 
 log "Installation de ${#PLUGIN_URLS[@]} plugin(s) depuis '$DEPENDENCIES_FILE'..."
 
+# --- Nettoyage global ---------------------------------------------------------
+# Garde une trace du dossier temporaire en cours pour le supprimer même en cas
+# d'interruption ou d'erreur inattendue (compatible bash 3.2, sans trap RETURN).
+
+CURRENT_TMP_DIR=""
+cleanup() {
+  if [[ -n "$CURRENT_TMP_DIR" && -d "$CURRENT_TMP_DIR" ]]; then
+    rm -rf "$CURRENT_TMP_DIR"
+  fi
+}
+trap cleanup EXIT
+
 # --- Boucle d'installation ----------------------------------------------------
 
 for url in "${PLUGIN_URLS[@]}"; do
@@ -130,14 +145,13 @@ for url in "${PLUGIN_URLS[@]}"; do
   fi
 
   tmp_dir="$(mktemp -d)"
-  # On s'assure que le dossier temporaire est bien supprimé même en cas d'erreur
-  trap 'rm -rf "$tmp_dir"' RETURN
+  CURRENT_TMP_DIR="$tmp_dir"
 
   log "  Clonage dans un dossier temporaire..."
   if ! git clone --depth 1 --quiet "$url" "$tmp_dir"; then
     err "  Échec du clonage de '$url'. Plugin ignoré."
     rm -rf "$tmp_dir"
-    trap - RETURN
+    CURRENT_TMP_DIR=""
     continue
   fi
 
@@ -145,7 +159,7 @@ for url in "${PLUGIN_URLS[@]}"; do
   if [[ ! -d "$src_path" ]]; then
     err "  Aucun dossier 'src' trouvé dans '$repo_name'. Plugin ignoré."
     rm -rf "$tmp_dir"
-    trap - RETURN
+    CURRENT_TMP_DIR=""
     continue
   fi
 
@@ -170,7 +184,7 @@ for url in "${PLUGIN_URLS[@]}"; do
   fi
 
   rm -rf "$tmp_dir"
-  trap - RETURN
+  CURRENT_TMP_DIR=""
 
   log "  ✔ Plugin '$repo_name' installé dans '$target_dir'."
 done
