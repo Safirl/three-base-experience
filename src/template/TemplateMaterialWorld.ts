@@ -1,9 +1,13 @@
 import World from "../world/World";
-import type { Material } from "../materials/types";
 import Experience from "../experience/Experience";
 import Environment from "../world/Environment";
 import * as THREE from "three/webgpu"
 import MaterialTemplate from "./MaterialTemplate";
+import type { Material } from "../materials/types";
+
+/**
+ * A template world setup with a simple sphere. Use it when you need to quickly work on a material
+ */
 
 export default class TemplateMaterialWorld extends World {
   declare private sphere: THREE.Mesh
@@ -11,6 +15,7 @@ export default class TemplateMaterialWorld extends World {
   declare scene: Experience["scene"];
   declare environment: Environment;
   declare resources: Experience["resources"];
+  declare private material: Material
 
   init(): void {
     super.init()
@@ -32,7 +37,12 @@ export default class TemplateMaterialWorld extends World {
   }
 
   createMaterial = () => {
-    const materialTemplate = new MaterialTemplate();
-    return materialTemplate.createMaterial()
+    this.material = new MaterialTemplate();
+    return this.material.createMaterial()
+  }
+
+  update(): void {
+    super.update()
+    this.material.update()
   }
 }

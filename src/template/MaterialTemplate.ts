@@ -42,6 +42,6 @@ export default class MaterialTemplate implements Material {
   };
 
   update = () => {
-
+    this.randomUniform.value += 1.;
   };
 }
