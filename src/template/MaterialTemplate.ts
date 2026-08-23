@@ -1,19 +1,15 @@
-import { positionLocal } from "three/tsl";
+import { positionLocal, sin, time, uniform, vec3 } from "three/tsl";
 import type { Material } from "../materials/types";
 import { MeshStandardNodeMaterial } from "three/webgpu";
 
 /**
- * I tried to think materials in a sperate class than the object itself.
- * Maybe seperate the compute vertex part and **** part is a mistake as we could want to do both at the same type.
- * Howewever we can still sore nodes or computes values in the class variables.
- * Also, maybe having a higher level of abstraction would be better, as THREE JS doesn't talk about Vertex or Fragment node but directly in opacity, color etc.
- */
-
-/**
- * Material template. Override it to have a quickstart
+ * Material template. Override it to have a quickstart. Use it when you need to separate the material from the rest of the code for a cleaner oraganization.
  */
 export default class MaterialTemplate implements Material {
   declare material: MeshStandardNodeMaterial
+  randomUniform = uniform(0.);
+  //or declare randomUniform: Uniform<number|"float"> but it overcomplicates it.
+
   createMaterial = (): MeshStandardNodeMaterial => {
     this.material = new MeshStandardNodeMaterial()
     this.computeVertex();
@@ -22,9 +18,18 @@ export default class MaterialTemplate implements Material {
   };
 
   computeVertex = () => {
+    if (!this.material) throw new Error("Material is not valid. Call 'createMaterial' first before calling this function.")
+
+    //create shader here
+    const oscY = sin(time.add(positionLocal.x))
+
+    //assign output here
+    this.material.positionNode = vec3(positionLocal.x, positionLocal.y.add(oscY), positionLocal.z)
   }
 
   computeFragment = () => {
+    if (!this.material) throw new Error("Material is not valid. Call 'createMaterial' first before calling this function.")
+
     //create shader here
     const TransformedPositionNode = positionLocal.add(1).mul(.5);
 
@@ -35,6 +40,7 @@ export default class MaterialTemplate implements Material {
   destroy = () => {
 
   };
+
   update = () => {
 
   };
