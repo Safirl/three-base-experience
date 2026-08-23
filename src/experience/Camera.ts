@@ -59,7 +59,9 @@ export default class Camera extends EventEmitter implements LifeTimeObject {
 
   update() {}
 
-  destroy() {}
+  destroy() {
+    this.scene.remove(this.instance)
+  }
 
   setDebugObject() {
     if (this.debug.active) {

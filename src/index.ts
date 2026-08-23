@@ -22,6 +22,11 @@ export { default as Resources } from "./utils/Resources";
 export { default as Sizes } from "./utils/Sizes";
 export { default as Time } from "./utils/Time";
 export { default as Debug } from "./utils/Debug";
+export { createRoundedRectangleGeometry } from "./utils/customShapes"
+export * from "./utils/easing"
+
+// Shaders
+export {roundedBoxSDF} from "./utils/shaders/shapes"
 
 // World
 export { default as World } from "./world/World";

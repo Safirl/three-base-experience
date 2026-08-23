@@ -10,6 +10,7 @@ import Debug from "../utils/Debug";
 import InputSystem from "../inputs/InputSystem";
 import CollisionManager from "../world/CollisionManager";
 import Stats from "three/addons/libs/stats.module.js";
+import GPURenderer from "./WebGPURenderer";
 
 export default class Experience implements LifeTimeObject {
   declare canvas: HTMLCanvasElement;
@@ -19,7 +20,7 @@ export default class Experience implements LifeTimeObject {
   declare sources: Source[];
   declare resources: Resources;
   declare camera: Camera;
-  declare renderer: Renderer;
+  declare renderer: Renderer | GPURenderer;
   declare world: World;
   declare debug: Debug;
   declare inputSystem: InputSystem;
@@ -34,6 +35,7 @@ export default class Experience implements LifeTimeObject {
     sources: Source[],
     camera: Camera,
     world: World,
+    useWebGPU: boolean = true,
   ) {
     //Singleton. That means you can't instantiate multiple experiences.
     if (Experience.instance) {
@@ -63,8 +65,11 @@ export default class Experience implements LifeTimeObject {
      */
     this.camera = camera;
     this.world = world;
-
-    this.renderer = new Renderer();
+    if (useWebGPU) {
+      this.renderer = new GPURenderer();
+    } else {
+      this.renderer = new Renderer();
+    }
 
     // Sizes resize event
     this.sizes.on("resize", () => {
@@ -90,12 +95,15 @@ export default class Experience implements LifeTimeObject {
    * Load the sources and init classes.
    */
   init = async () => {
+    if (this.renderer instanceof GPURenderer) {
+      await this.renderer.instance.init();
+    }
     await this.loadAsync(this.sources);
+    this.camera.init();
+    this.world.init();
     this.time.on("tick", () => {
       this.update();
     });
-    this.camera.init();
-    this.world.init();
     this.areResourcesLoaded = true;
   };
 

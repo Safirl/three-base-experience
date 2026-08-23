@@ -4,6 +4,7 @@ import Experience from "./experience/Experience";
 import templateSources from "./template/templateSources";
 import OrbitCamera from "./template/OrbitCamera";
 import TemplateWorld from "./template/TemplateWorld";
+import TemplateMaterialWorld from "./template/TemplateMaterialWorld";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "three",
@@ -17,6 +18,6 @@ if (!canvas) {
 canvas.style.width = "100%";
 canvas.style.height = "100%";
 const camera = new OrbitCamera();
-const world = new TemplateWorld();
+const world = new TemplateMaterialWorld();
 const experience = new Experience(canvas, templateSources, camera, world);
 await experience.init();
