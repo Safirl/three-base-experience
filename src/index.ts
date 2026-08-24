@@ -26,7 +26,7 @@ export { createRoundedRectangleGeometry } from "./utils/customShapes"
 export * from "./utils/easing"
 
 // Shaders
-export {roundedBoxSDF} from "./utils/shaders/shapes"
+export {roundedBoxSDF} from "./materials/utils/shapes"
 
 // World
 export { default as World } from "./world/World";
