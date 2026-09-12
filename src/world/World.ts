@@ -1,7 +1,7 @@
 import Experience from "../experience/Experience";
 import Environment from "./Environment";
 import type { LifeTimeObject } from "../types/types";
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 import type Resources from "../utils/Resources";
 
 /**

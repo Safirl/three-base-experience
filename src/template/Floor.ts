@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 import StaticObject from "../objects/StaticObject";
 
 export default class Floor extends StaticObject {

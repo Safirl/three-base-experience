@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 import type Resources from "../utils/Resources";
 import Experience from "../experience/Experience";
 import type { LifeTimeObject, Textures } from "../types/types";

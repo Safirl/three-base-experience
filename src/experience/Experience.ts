@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 import Camera from "./Camera";
 import Renderer from "./Renderer";
 import { type LifeTimeObject, type Source } from "../types/types";
@@ -75,9 +75,6 @@ export default class Experience implements LifeTimeObject {
     this.sizes.on("resize", () => {
       this.resize();
     });
-    if (this.debug.active) {
-      this.displayPerformances();
-    }
     console.log("Experience class instantiated");
   }
 
@@ -96,11 +93,13 @@ export default class Experience implements LifeTimeObject {
    */
   init = async () => {
     if (this.renderer instanceof GPURenderer) {
+      this.debug.init();
       await this.renderer.instance.init();
     }
     await this.loadAsync(this.sources);
     this.camera.init();
     this.world.init();
+    //@TODO Replace the Time class init to use setAnimationLoop instead. It is REQUIRED to use three js in XR Projects.
     this.time.on("tick", () => {
       this.update();
     });
@@ -141,9 +140,6 @@ export default class Experience implements LifeTimeObject {
 
     this.sizes.destroy();
     this.renderer.instance.dispose();
-    if (this.debug.active) {
-      this.debug.ui.destroy();
-    }
 
     this.inputSystem.destroy();
     console.log("Experience class destroyed");

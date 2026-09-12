@@ -28,7 +28,6 @@
     "vite-plugin-restart": "^2.0.0"
   },
   "peerDependencies": {
-    "lil-gui": "^0.21.0",
     "three": "^0.183.0"
   }
 }

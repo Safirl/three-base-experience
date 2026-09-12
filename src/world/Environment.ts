@@ -1,9 +1,9 @@
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 import Experience from "../experience/Experience";
 import type Debug from "../utils/Debug";
-import type GUI from "lil-gui";
 import EnvironmentMap from "./EnvironmentMap";
 import type { LifeTimeObject } from "../types/types";
+import type { ParametersGroup } from "three/examples/jsm/inspector/tabs/Parameters.js";
 
 export default class Environment implements LifeTimeObject {
 	declare shadowHelper: THREE.CameraHelper;
@@ -13,8 +13,8 @@ export default class Environment implements LifeTimeObject {
 	declare resources: Experience["resources"];
 	declare environmentMap: EnvironmentMap;
 	declare debug: Debug;
-	declare debugFolder: GUI;
-	declare protected sunlightDebugFolder: GUI;
+	declare debugFolder: ParametersGroup;
+	declare protected sunlightDebugFolder: ParametersGroup;
 
 	constructor(
 		lightingEnvironmentMap?: THREE.CubeTexture,
@@ -33,7 +33,7 @@ export default class Environment implements LifeTimeObject {
 		this.debug = this.experience.debug;
 
 		if (this.debug.active) {
-			this.debugFolder = this.debug.ui.addFolder("environment");
+			this.debugFolder = this.debug.inspector.createParameters("🗺️ environment");
 		}
 
 		this.setSunlight();
@@ -94,11 +94,8 @@ export default class Environment implements LifeTimeObject {
 	setDebugObject() {
 		if (this.debug.active) {
 			this.debugFolder
-				.add(this.environmentMap, "intensity")
+				.add(this.environmentMap, "intensity", 0, 4, .001)
 				.name("envMapIntensity")
-				.min(0)
-				.max(4)
-				.step(0.001)
 				.onChange(this.environmentMap.updateMaterials);
 
 			this.sunlightDebugFolder = this.debugFolder.addFolder("☀️ sunlight");

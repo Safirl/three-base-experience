@@ -4,7 +4,7 @@ import Floor from "./Floor";
 import type { GLTF } from "three/examples/jsm/Addons.js";
 import Actor from "../objects/Actor";
 import World from "../world/World";
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 
 export default class TemplateWorld extends World {
   declare experience: Experience;

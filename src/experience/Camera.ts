@@ -1,10 +1,10 @@
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 // import { OrbitControls } from "three/examples/jsm/Addons.js";
 import Experience from "./Experience";
 import type { LifeTimeObject } from "../types/types";
 import type Debug from "../utils/Debug";
-import type GUI from "lil-gui";
 import { EventEmitter } from "../utils/EventEmitter";
+import type { ParametersGroup } from "three/examples/jsm/inspector/tabs/Parameters.js";
 
 export default class Camera extends EventEmitter implements LifeTimeObject {
   declare experience: Experience;
@@ -12,7 +12,7 @@ export default class Camera extends EventEmitter implements LifeTimeObject {
   declare scene: Experience["scene"];
   declare canvas: Experience["canvas"];
   declare debug: Debug;
-  declare debugFolder: GUI;
+  declare debugFolder: ParametersGroup;
   //@TODO do we want to keep a perspective camera or give the opportunity to change it ?
   declare instance: THREE.PerspectiveCamera; //or THREE.Camera
   // declare controls: OrbitControls
@@ -33,7 +33,7 @@ export default class Camera extends EventEmitter implements LifeTimeObject {
     this.debug = this.experience.debug;
 
     if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder("🎥 camera");
+      this.debugFolder = this.debug.inspector.createParameters("🎥 camera");
     }
 
     this.setInstance();
@@ -66,11 +66,8 @@ export default class Camera extends EventEmitter implements LifeTimeObject {
   setDebugObject() {
     if (this.debug.active) {
       this.debugFolder
-        .add(this.instance, "fov")
+        .add(this.instance, "fov", 5, 120, 1)
         .name("fov")
-        .min(5)
-        .max(120)
-        .step(1)
         .onChange(() => this.instance.updateProjectionMatrix());
     }
   }

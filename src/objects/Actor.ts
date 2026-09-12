@@ -1,12 +1,12 @@
 import Experience from "../experience/Experience";
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 import type Resources from "../utils/Resources";
 import { SkeletonUtils, type GLTF } from "three/examples/jsm/Addons.js";
 import type Time from "../utils/Time";
 import type Debug from "../utils/Debug";
-import type GUI from "lil-gui";
 import { Animation } from "./Animation";
 import type { LifeTimeObject } from "../types/types";
+import type { ParametersGroup } from "three/examples/jsm/inspector/tabs/Parameters.js";
 
 /**
  * Base class for animated 3D objects. Auto creates a debug folder to play animations.
@@ -22,7 +22,7 @@ export default class Actor implements LifeTimeObject {
   declare animation: Animation;
   declare time: Time;
   declare debug: Debug;
-  declare debugFolder: GUI;
+  declare debugFolder: ParametersGroup;
   declare name: string;
   private id: string = crypto.randomUUID();
 
@@ -41,8 +41,7 @@ export default class Actor implements LifeTimeObject {
     this.experience = Experience.instance;
     this.debug = this.experience.debug;
     if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder(name);
-      this.debugFolder.close();
+      this.debugFolder = this.debug.inspector.createParameters(name);
     }
     this.name = name;
     this.scene = this.experience.scene;

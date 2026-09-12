@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import Camera from "../experience/Camera";
 
