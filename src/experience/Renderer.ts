@@ -8,6 +8,7 @@ import {
 } from "three/examples/jsm/Addons.js";
 
 /**
+ * Deprecated. Use the WebGPURenderer instead.
  * Instantiate a WebGLRenderTarget. If a pass is added, a composer is instantiated and used for the render instead of the classic renderer.
  */
 

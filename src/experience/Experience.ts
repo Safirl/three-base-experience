@@ -67,15 +67,19 @@ export default class Experience implements LifeTimeObject {
     this.world = world;
     if (useWebGPU) {
       this.renderer = new GPURenderer();
-    } else {
-      this.renderer = new Renderer();
     }
+    //deprecated.
+    // else {
+    //   this.renderer = new Renderer();
+    // }
 
     // Sizes resize event
     this.sizes.on("resize", () => {
       this.resize();
     });
-    console.log("Experience class instantiated");
+    if (this.debug.active) {
+      console.log("Experience class instantiated");
+    }
   }
 
   loadAsync = async (sources: Source[]) => {
