@@ -1,16 +1,62 @@
 # three-base-experience
 Base classes for quickly bootstrapping a Three.js experience.
 
-## Installation
+## Repo installation
+
+Clone the repository:
 
 ```bash
-npm i https://github.com/Safirl/three-base-experience.git
+git clone https://github.com/Safirl/three-base-experience.git
 ```
 
-Make sure your project also has the required peer dependencies:
+Install dependencies:
 
 ```bash
-npm i three lil-gui vite-plugin-restart vite-plugin-dts
+npm i
+```
+
+Run the project:
+
+```bash
+npm run dev
+```
+
+## Installation in an existing prohect
+You can install plugins through the `install.sh` script.
+
+Create your project
+```bash
+# Don't forget to check typescript as the plugins use it.
+npm create vite@latest
+```
+
+Install the required peer dependencies:
+
+```bash
+npm i three vite-plugin-restart vite-plugin-dts
+```
+
+Create a `dependencies.json` file with the links to the required plugins:
+
+```json
+["https://github.com/Safirl/three-base-experience.git"]
+```
+
+Run the install script:
+```bash
+# macos
+curl -fsSL https://raw.githubusercontent.com/Safirl/three-base-experience/main/scripts/install.sh | bash
+```
+
+You can add a path to easily import plugins in your files.
+```js
+{
+"compilerOptions": {
+    "paths": {
+      "@plugins/*": ["./src/plugins/*"],
+    }
+  },
+}
 ```
 
 > **Note:** Add a `<canvas id="three">` to your HTML and a `reset.css` that sets `html, body { margin: 0; width: 100%; height: 100%; }` to avoid unwanted scrollbars.
@@ -20,7 +66,7 @@ npm i three lil-gui vite-plugin-restart vite-plugin-dts
 The snippet below spins up a scene with an orbit-control camera using the built-in template classes.
 
 ```ts
-import { Experience, OrbitCamera, TemplateWorld, templateSources } from 'base-experience'
+import { Experience, OrbitCamera, TemplateWorld, templateSources } from '@plugins/three-base-experience'
 
 const canvas = document.getElementById('three') as HTMLCanvasElement
 canvas.style.width = '100%'
@@ -39,7 +85,7 @@ Supported types: `"texture"`, `"cubeTexture"`, `"gltfModel"`.
 
 ```ts
 // src/sources.ts
-import type { Source } from 'base-experience'
+import type { Source } from '@plugins/three-base-experience'
 
 const sources: Source[] = [
   {
@@ -72,7 +118,7 @@ export default sources
 Then pass the array when creating the experience:
 
 ```ts
-import { Experience, OrbitCamera, TemplateWorld } from 'base-experience'
+import { Experience, OrbitCamera, TemplateWorld } from '@plugins/three-base-experience'
 import sources from './sources'
 
 const experience = new Experience(canvas, sources, new OrbitCamera(), new TemplateWorld())
@@ -81,7 +127,7 @@ const experience = new Experience(canvas, sources, new OrbitCamera(), new Templa
 Inside a `World` subclass you can access loaded assets after the `ready` event fires:
 
 ```ts
-import { World, Actor } from 'base-experience'
+import { World, Actor } from '@plugins/three-base-experience'
 import type { GLTF } from 'three/examples/jsm/Addons.js'
 
 export default class MyWorld extends World {
@@ -100,7 +146,7 @@ An `InputProfile` maps physical inputs to named game events. Pass one or more pr
 The profile `id` **must** be `"keyboard"`. Button `index` values are [`KeyboardEvent.code`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code) strings.
 
 ```ts
-import type { InputProfile } from 'base-experience'
+import type { InputProfile } from '@plugins/three-base-experience'
 
 const keyboardProfile: InputProfile = {
   id: 'keyboard',
@@ -117,7 +163,7 @@ const keyboardProfile: InputProfile = {
 The profile `id` must match the `id` string reported by the browser's [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad/id) for your controller. Button `index` values are the numeric indices in `gamepad.buttons[]`. Axis `index` values are the numeric indices in `gamepad.axes[]`.
 
 ```ts
-import type { InputProfile } from 'base-experience'
+import type { InputProfile } from '@plugins/three-base-experience'
 
 const gamepadProfile: InputProfile = {
   id: 'Xbox 360 Controller (XInput STANDARD GAMEPAD)',
@@ -138,7 +184,7 @@ const gamepadProfile: InputProfile = {
 ### Registering profiles and listening to events
 
 ```ts
-import type { InputEventArgs } from 'base-experience'
+import type { InputEventArgs } from '@plugins/three-base-experience'
 
 experience.inputSystem.addInputProfiles([keyboardProfile, gamepadProfile])
 
