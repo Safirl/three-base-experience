@@ -48,7 +48,9 @@ Run the install script:
 curl -fsSL https://raw.githubusercontent.com/Safirl/three-base-experience/main/scripts/install.sh | bash
 ```
 
-You can add a path to easily import plugins in your files.
+### Imports
+You can add a path to easily import plugins in your files. In `tsconfig.json`
+
 ```js
 {
 "compilerOptions": {
@@ -57,6 +59,24 @@ You can add a path to easily import plugins in your files.
     }
   },
 }
+```
+
+Install dependencies
+
+```bash
+npm i -D vite-tsconfig-paths
+```
+
+
+In `vite.config.ts`
+
+```js
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+
+export default defineConfig({
+  plugins: [tsconfigPaths()],
+});
 ```
 
 > **Note:** Add a `<canvas id="three">` to your HTML and a `reset.css` that sets `html, body { margin: 0; width: 100%; height: 100%; }` to avoid unwanted scrollbars.
