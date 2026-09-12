@@ -61,21 +61,15 @@ You can add a path to easily import plugins in your files. In `tsconfig.json`
 }
 ```
 
-Install dependencies
-
-```bash
-npm i -D vite-tsconfig-paths
-```
-
-
 In `vite.config.ts`
 
 ```js
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  resolve: {
+    tsconfigPaths: true,
+  }
 });
 ```
 
