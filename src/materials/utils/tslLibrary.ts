@@ -1,4 +1,4 @@
-import { Fn, If, abs, blendDodge, clamp, cross, dFdx, dFdy, dot, float, max, mix, normalize, select, sign, smoothstep} from "three/tsl";
+import { Fn, If, abs, clamp, cross, dFdx, dFdy, dot, float, max, mix, normalize, select, sign, smoothstep, vec2} from "three/tsl";
 import * as THREE from "three/webgpu"
 
 export const pingPong = Fn(({value, scale}: {value: THREE.Node<"float">, scale:THREE.Node<"float">}) => {
@@ -39,8 +39,8 @@ export const bump = Fn(({ height, strength, dist, normal, surfacePos, invert }: 
   const absDet = abs(det);
 
   // Gradient de la hauteur projeté sur le repère tangent
-  const dHdx = dFdx(height);
-  const dHdy = dFdy(height);
+  const dHdx = dFdx(vec2(height));
+  const dHdy = dFdy(vec2(height));
   const surfaceGradient = dHdx.mul(Rx).add(dHdy.mul(Ry));
 
   const strengthClamped = max(strength, 0.0);
@@ -86,6 +86,6 @@ export const smoothMin = Fn(({a, b, k }: {a: any, b:any, k:THREE.Node<"float">})
       1.0
     );
 
-    return mix(b, a, h).sub(k.mul(h).mul(float(1).sub(h)));
+    return mix(b, a, h.x).sub(k.mul(h).mul(float(1).sub(h)));
   }
 );
