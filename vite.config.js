@@ -3,6 +3,12 @@ import restart from 'vite-plugin-restart'
 import dts from 'vite-plugin-dts'
 
 export default {
+    optimizeDeps: {
+      exclude: [
+        'three/addons/inspector/Inspector.js',
+        'three/addons/inspector/extensions/*',
+      ],
+    },
     server:
     {
         host: true,
